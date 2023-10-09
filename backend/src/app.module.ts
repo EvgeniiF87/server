@@ -42,7 +42,7 @@ import { TokensModule } from "./tokens/tokens.module";
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
-        type: config.get<"aurora-postgres">("TYPEORM_CONNECTION"),
+        type: "postgres",
         host: config.get<string>("TYPEORM_HOST"),
         username: config.get<string>("TYPEORM_USERNAME"),
         password: config.get<string>("TYPEORM_PASSWORD"),
