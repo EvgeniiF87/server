@@ -3,6 +3,6 @@ import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class UpdateTokenInput extends PartialType(CreateTokenInput) {
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   id: number;
 }

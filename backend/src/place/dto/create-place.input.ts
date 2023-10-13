@@ -31,13 +31,11 @@ export class CreatePlaceInput {
   publish?: boolean;
 
   @Field(() => Date, { nullable: true })
-  @IsString({ message: 'поле должно быть строкой' })
   @IsNotEmpty({ message: 'поле не должно быть пустым' })
   @IsDate({ message: 'поле должно быть датой в формате ГОД:МЕСЯЦ:ДЕНЬ' })
   existTimeStart?: Date;
 
   @Field(() => Date, { nullable: true })
-  @IsString({ message: 'поле должно быть строкой' })
   @IsNotEmpty({ message: 'поле не должно быть пустым' })
   @IsDate({ message: 'поле должно быть датой в формате ГОД:МЕСЯЦ:ДЕНЬ' })
   existTimeEnd?: Date;

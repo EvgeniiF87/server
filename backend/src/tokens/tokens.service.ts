@@ -17,21 +17,21 @@ export class TokensService {
     return await this.tokenRepository.save({ ...createTokenInput });
   }
 
-  // findAll() {
-  //   return `This action returns all tokens`;
-  // }
+  async findOneUserID(userId: number) {
+    return await this.tokenRepository.findOne({ where: { userId } });
+  }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} token`;
-  // }
+  async findOneRefreshToken(refresh_token: string) {
+    return await this.tokenRepository.findOne({ where: { refresh_token } });
+  }
 
-  // update(id: number, updateTokenInput: UpdateTokenInput) {
-  //   return `This action updates a #${id} token`;
-  // }
+  async update(id: number, updateTokenInput: CreateTokenInput) {
+    return await this.tokenRepository.update({ id }, { ...updateTokenInput });
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} token`;
-  // }
+  async remove(id: number) {
+    return await this.tokenRepository.delete({ id });
+  }
 
   async generateRefreshToken(userId: number): Promise<CreateTokenInput> {
     return { expire: addMonths(new Date(), 2), refresh_token: v4(), userId };

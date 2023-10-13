@@ -17,11 +17,11 @@ import { TokensModule } from 'src/tokens/tokens.module';
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
+        signOptions: { expiresIn: '30s' },
       }),
     }),
   ],
   providers: [AuthResolver, AuthService],
-  exports: [JwtModule],
+  exports: [JwtModule, AuthService],
 })
 export class AuthModule {}
