@@ -10,10 +10,17 @@ import * as bcrypt from 'bcrypt';
 import { UserEntity } from 'src/user/entities/user.entity';
 import { SignInInput } from './dto/signin.dto';
 import { TokensService } from 'src/tokens/tokens.service';
+import { Response } from 'express';
 
 enum RegistrationType {
   User = 'user',
   Manager = 'manager',
+}
+
+interface RefreshToken {
+  refresh_token: string;
+  expire: Date;
+  userId: number;
 }
 
 @Injectable()
@@ -23,17 +30,6 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly tokensService: TokensService,
   ) {}
-
-  async signIn(signinInput: SignInInput) {
-    const user = await this.validateUser(signinInput);
-    const token = this.generateTokens(user);
-
-    return {
-      token: token.token,
-      userId: user.id,
-      role: user.role.name,
-    };
-  }
 
   private async registration(
     createUserInput: CreateUserInput,
@@ -61,7 +57,7 @@ export class AuthService {
 
     const user = await this.userService.findOne(createdUser.id);
 
-    const token = this.generateTokens(user);
+    const token = this.generateToken(user);
     const refresh_token = await this.tokensService.generateRefreshToken(
       user.id,
     );
@@ -83,13 +79,13 @@ export class AuthService {
     return await this.registration(createUserInput, RegistrationType.Manager);
   }
 
-  private generateTokens(user: UserEntity) {
+  generateToken(user: UserEntity) {
     const payload = { id: user.id, role: user.role.name };
     const token = this.jwtService.sign(payload);
     return { token };
   }
 
-  private async validateUser(signinInput: SignInInput) {
+  async validateUser(signinInput: SignInInput) {
     try {
       const user = await this.userService.isExist(signinInput.email);
       const passwordEquals = await bcrypt.compare(
@@ -102,5 +98,42 @@ export class AuthService {
     } catch (e) {
       throw new UnauthorizedException('Не верный логин или пароль');
     }
+  }
+
+  private validRefreshToken(expire: Date) {
+    return new Date() > new Date(expire) ? false : true;
+  }
+
+  async refreshToken(refresh_token: string) {
+    if (!refresh_token) throw new UnauthorizedException('Вы не авторизованы!');
+
+    const userRefreshToken = await this.tokensService.findOneRefreshToken(
+      refresh_token,
+    );
+
+    const isValid = this.validRefreshToken(userRefreshToken.expire);
+
+    if (!userRefreshToken && !isValid)
+      throw new UnauthorizedException('Вы не авторизованы!');
+
+    const user = await this.userService.findOne(userRefreshToken.userId);
+
+    const token = this.generateToken(user);
+
+    return token;
+  }
+
+  setCookies(refresh_token: RefreshToken, res: Response) {
+    if (!refresh_token) {
+      throw new UnauthorizedException('Вы не авторизованы!');
+    }
+
+    res.cookie('refresh_token', refresh_token.refresh_token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      expires: new Date(refresh_token.expire),
+      secure: false,
+      path: '/',
+    });
   }
 }

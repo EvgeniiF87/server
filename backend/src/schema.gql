@@ -288,9 +288,10 @@ type Mutation {
   createRole(createRoleInput: CreateRoleInput!): RoleEntity!
   createTag(createTagInput: CreateTagInput!): TagEntity!
   createToken(createTokenInput: CreateTokenInput!): TokenEntity!
+  publishEvent(id: Int!): EventEntity!
   publishPlace(id: Int!): PlaceEntity!
-  registrationMeneger(registrationUserInput: CreateUserInput!): Tokens!
-  registrationUser(registrationUserInput: CreateUserInput!): Tokens!
+  registrationMeneger(registrationUserInput: CreateUserInput!): Token!
+  registrationUser(registrationUserInput: CreateUserInput!): Token!
   removeCostOption(id: Int!): CostOptionEntity!
   removeEvent(id: Int!): RemoveResponse!
   removeEventPlaceCostOption(id: Int!): EventPlaceCostOptionEntity!
@@ -305,7 +306,7 @@ type Mutation {
   removeRole(id: Int!): RoleEntity!
   removeTag(id: Int!): RemoveResponse!
   removeUser(id: Int!): UserEntity!
-  signIn(signinUserInput: SignInInput!): Tokens!
+  signIn(signinUserInput: SignInInput!): Token!
   updateCostOption(updateCostOptionInput: UpdateCostOptionInput!): CostOptionEntity!
   updateEvent(updateEventInput: UpdateEventInput!): EventEntity!
   updateEventPlaceCostOption(updateEventPlaceCostOptionInput: UpdateEventPlaceCostOptionInput!): EventPlaceCostOptionEntity!
@@ -404,12 +405,17 @@ type Query {
   placeDashboard(id: Int!): PlaceEntity!
   places(direction: PlaceDirections, skip: Int, take: Int): [PlaceEntity!]!
   placesDashboard(direction: PlaceDirections, skip: Int, take: Int): [PlaceEntity!]!
+  refreshToken: RefreshTokenResponse!
   role(id: Int!): RoleEntity!
   tag(id: Int!): TagEntity!
   user(id: Int!): UserEntity!
   userEvents(id: Int!): [EventEntity!]!
   userPlaces(id: Int!): [PlaceEntity!]!
   users: [UserEntity!]!
+}
+
+type RefreshTokenResponse {
+  token: String!
 }
 
 type RemoveResponse {
@@ -468,17 +474,17 @@ type TagEntity {
   tags: [EventPlaceTagEntity!]!
 }
 
+type Token {
+  role: String!
+  token: String!
+  userId: Int!
+}
+
 type TokenEntity {
   expire: DateTime!
   id: Int!
   refresh_token: String!
   user: UserEntity!
-  userId: Int!
-}
-
-type Tokens {
-  role: String!
-  token: String!
   userId: Int!
 }
 
