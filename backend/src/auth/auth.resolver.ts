@@ -11,10 +11,14 @@ import { User } from './decorators/user.decoratod';
 import { CookieGuard } from './guards/cookie.guard';
 import RefreshTokenResponse from './refresh_token.response';
 import { AccessToken } from './decorators/token.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @Resolver(() => Token)
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly config: ConfigService,
+  ) {}
 
   @UseGuards(SignInGuard)
   @Mutation(() => Token)
@@ -22,6 +26,8 @@ export class AuthResolver {
     @Args('signinUserInput') signInInput: SignInInput,
     @User() user: Token,
   ) {
+    console.log(this.config.get<string>('JWT_SECRET'));
+
     return user;
   }
 
