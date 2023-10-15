@@ -2,7 +2,7 @@ import { Global, Module, forwardRef } from '@nestjs/common';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
-import { JwtModule } from '@nestjs/jwt';
+// import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TokensModule } from 'src/tokens/tokens.module';
 
@@ -12,16 +12,16 @@ import { TokensModule } from 'src/tokens/tokens.module';
     forwardRef(() => UserModule),
     ConfigModule,
     TokensModule,
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '30s' },
-      }),
-    }),
+    // JwtModule.registerAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: async (config: ConfigService) => ({
+    //     secret: config.get<string>('JWT_SECRET'),
+    //     signOptions: { expiresIn: '30s' },
+    //   }),
+    // }),
   ],
   providers: [AuthResolver, AuthService],
-  exports: [JwtModule, AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}
