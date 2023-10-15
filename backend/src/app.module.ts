@@ -21,7 +21,6 @@ import { RoleModule } from './role/role.module';
 import { GraphQLError } from 'graphql';
 import { AuthModule } from './auth/auth.module';
 import { TokensModule } from './tokens/tokens.module';
-import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -72,7 +71,6 @@ import { JwtModule } from '@nestjs/jwt';
     RoleModule,
     AuthModule,
     TokensModule,
-    JwtModule,
   ],
 })
 export class AppModule {}
