@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
+  BadRequestException,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import {
@@ -23,17 +24,24 @@ export class AppController {
     @UploadedFile() preview: Express.Multer.File,
     @Query() query: IQuery
   ) {
+    if (!preview)
+      throw new BadRequestException("Ошибка! Изображение не получено");
     if (query) {
       const { w, h } = query;
-      return (await this.appService.savePreview(preview, +w, +h)).url;
+      const url = (await this.appService.savePreview(preview, +w, +h)).url;
+      return { url };
     } else {
-      return (await this.appService.savePreview(preview)).url;
+      const url = (await this.appService.savePreview(preview)).url;
+      return { url };
     }
   }
 
   @Post("images")
   @UseInterceptors(FileFieldsInterceptor([{ name: "images" }]))
   async saveImages(@UploadedFiles() images: Express.Multer.File[]) {
+    if (!images)
+      throw new BadRequestException("Ошибка! Изображения не получены");
+
     const filesArr = Object.values(images).map((image) => image)[0];
     const imagesArr = [];
 
