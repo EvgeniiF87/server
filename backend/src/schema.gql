@@ -195,32 +195,32 @@ type EventPlaceTagEntity {
   event: EventEntity!
   eventId: Int
   id: ID!
-  place: EventEntity!
+  place: PlaceEntity!
   placeId: Int
   tags: TagEntity!
   tagsId: Int!
 }
 
 type ImageEntity {
-  event: [EventEntity!]!
+  event: EventEntity!
   eventId: Int
   id: ID!
   path: String!
-  place: [PlaceEntity!]!
+  place: PlaceEntity!
   placeId: Int
 }
 
 type InfoEntity {
   adress: String
-  call_back: Boolean!
-  event: [EventEntity!]!
+  call_back: Boolean
+  event: EventEntity!
   eventId: Int
   id: ID!
   latitude: String
   longitude: String
   metro: String
   phone: String
-  place: [PlaceEntity!]!
+  place: PlaceEntity!
   placeId: Int
   site: String
   social: String
@@ -283,7 +283,6 @@ type Mutation {
   createInterestingCategorySelect(createInterestingCategorySelectInput: CreateInterestingCategorySelectInput!): InterestingCategorySelectEntity!
   createInterestingCollection(createInterestingCollectionInput: CreateInterestingCollectionInput!): InterestingCollectionEntity!
   createInterestingCollectionSelection(createInterestingCollectionSelectionInput: CreateInterestingCollectionSelectionInput!): InterestingCollectionSelectionEntity!
-  createManagers(createUserInput: CreateUserInput!): UserEntity!
   createPlace(createPlaceInput: CreatePlaceInput!): PlaceEntity!
   createRole(createRoleInput: CreateRoleInput!): RoleEntity!
   createTag(createTagInput: CreateTagInput!): TagEntity!
@@ -365,7 +364,7 @@ type PlaceEntity {
   existTimeStart: DateTime
   id: ID!
   images: [ImageEntity!]!
-  info: [InfoEntity!]!
+  info: InfoEntity!
   interesting: [InterestingCollectionSelectionEntity!]!
   preview: String
   publish: Boolean!
@@ -386,8 +385,8 @@ type Query {
   eventPlaceCostOptions: [EventPlaceCostOptionEntity!]!
   eventPlaceTag(id: Int!): EventPlaceTagEntity!
   eventPlaceTags: [EventPlaceTagEntity!]!
-  events(direction: EventDirections, skip: Int, take: Int): [EventEntity!]!
-  eventsDashboard(direction: EventDirections, skip: Int, take: Int): [EventEntity!]!
+  events(params: RequestEvent): [EventEntity!]!
+  eventsDashboard(params: RequestEvent): [EventEntity!]!
   getEventsCount: CountResponse!
   getPlacesCount: CountResponse!
   getUsersCount: CountResponse!
@@ -403,8 +402,8 @@ type Query {
   interestingCollections(catId: Int, skip: Int, take: Int): InterestingCollectionsAndCount!
   place(id: Int!): PlaceEntity!
   placeDashboard(id: Int!): PlaceEntity!
-  places(direction: PlaceDirections, skip: Int, take: Int): [PlaceEntity!]!
-  placesDashboard(direction: PlaceDirections, skip: Int, take: Int): [PlaceEntity!]!
+  places(params: RequestPlace): [PlaceEntity!]!
+  placesDashboard(params: RequestPlace): [PlaceEntity!]!
   refreshToken: RefreshTokenResponse!
   role(id: Int!): RoleEntity!
   tag(id: Int!): TagEntity!
@@ -422,6 +421,21 @@ type RemoveResponse {
   id: Int
   message: String!
   status: String!
+}
+
+input RequestEvent {
+  desc: String
+  direction: EventDirections
+  skip: Int
+  tag: String
+  take: Int
+  title: String
+}
+
+input RequestPlace {
+  direction: PlaceDirections
+  skip: Int
+  take: Int
 }
 
 type RoleEntity {
@@ -614,7 +628,7 @@ type UserEntity {
   id: ID!
   name: String!
   password: String!
-  phone: String!
+  phone: String
   places: [PlaceEntity!]
   role: RoleEntity!
   roleId: Int!

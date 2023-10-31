@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EventModule } from './event/event.module';
 import { TagModule } from './tag/tag.module';
 import { CostOptionsModule } from './cost-options/cost-options.module';
@@ -16,45 +15,20 @@ import { InterestingCollectionModule } from './interesting_collection/interestin
 import { InterestingCollectionSelectionsModule } from './interesting_collection_selections/interesting_collection_selections.module';
 import { InterestingCategoriesModule } from './interesting_categories/interesting_categories.module';
 import { InterestingCategorySelectModule } from './interesting_category_select/interesting_category_select.module';
-import { join } from 'path';
 import { RoleModule } from './role/role.module';
-import { GraphQLError } from 'graphql';
 import { AuthModule } from './auth/auth.module';
 import { TokensModule } from './tokens/tokens.module';
+import { ormconfig } from './config/ormconfig';
+import { GraphqlConfig } from './config/graphqlconfig';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      sortSchema: true,
-      playground: {
-        settings: { 'request.credentials': 'include' },
-      },
-      includeStacktraceInErrorResponses: false,
-      formatError: (err: GraphQLError) => {
-        return {
-          message: err.message,
-          extensions: err.extensions,
-        };
-      },
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '../.env',
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: async (config: ConfigService) => ({
-        type: 'postgres',
-        username: config.get<string>('TYPEORM_USERNAME'),
-        password: config.get<string>('TYPEORM_PASSWORD'),
-        database: config.get<string>('TYPEORM_DATABASE'),
-        port: config.get<number>('TYPEORM_PORT'),
-        entities: [__dirname + 'dist/**/*.entity{.ts,.js}'],
-        synchronize: true,
-        autoLoadEntities: true,
-        logging: true,
-      }),
-    }),
+    GraphQLModule.forRoot(GraphqlConfig),
+    TypeOrmModule.forRootAsync(ormconfig),
     UserModule,
     EventModule,
     TagModule,

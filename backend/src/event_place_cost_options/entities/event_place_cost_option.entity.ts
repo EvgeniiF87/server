@@ -16,7 +16,7 @@ export class EventPlaceCostOptionEntity {
   event: EventEntity;
 
   @Field(() => Int)
-  @Column()
+  @Column({ nullable: true })
   eventId?: number;
 
   @Field(() => PlaceEntity)
@@ -24,7 +24,7 @@ export class EventPlaceCostOptionEntity {
   place: PlaceEntity;
 
   @Field(() => Int)
-  @Column()
+  @Column({ nullable: true })
   placeId?: number;
 
   @Field(() => CostOptionEntity)

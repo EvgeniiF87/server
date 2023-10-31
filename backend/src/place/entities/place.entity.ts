@@ -43,15 +43,15 @@ export class PlaceEntity extends DefaultFieldsEntity {
   })
   images: ImageEntity[];
 
-  @Field(() => [InfoEntity])
+  @Field(() => InfoEntity)
   @OneToOne(() => InfoEntity, (info) => info.place, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  info: InfoEntity[];
+  info: InfoEntity;
 
-  @OneToMany(() => EventPlaceTagEntity, (tag) => tag.place)
   @Field(() => [EventPlaceTagEntity])
+  @OneToMany(() => EventPlaceTagEntity, (tag) => tag.place)
   tags: EventPlaceTagEntity[];
 
   @Field(() => [EventPlaceCostOptionEntity])
@@ -63,13 +63,13 @@ export class PlaceEntity extends DefaultFieldsEntity {
     () => InterestingCollectionSelectionEntity,
     (interesting) => interesting.place,
   )
-  interesting: InterestingCollectionSelectionEntity;
+  interesting: InterestingCollectionSelectionEntity[];
 
   @Field(() => Date)
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
   @Field(() => Date)
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 }

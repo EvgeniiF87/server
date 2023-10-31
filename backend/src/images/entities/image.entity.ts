@@ -14,7 +14,7 @@ export class ImageEntity {
   @Column({ unique: true })
   path?: string;
 
-  @Field(() => [PlaceEntity])
+  @Field(() => PlaceEntity)
   @ManyToOne(() => PlaceEntity, (place) => place.images, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -25,7 +25,7 @@ export class ImageEntity {
   @Column({ nullable: true })
   placeId: number;
 
-  @Field(() => [EventEntity])
+  @Field(() => EventEntity)
   @ManyToOne(() => EventEntity, (place) => place.images, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

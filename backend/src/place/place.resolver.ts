@@ -3,11 +3,11 @@ import { PlaceService } from './place.service';
 import { PlaceEntity } from './entities/place.entity';
 import { CreatePlaceInput } from './dto/create-place.input';
 import { UpdatePlaceInput } from './dto/update-place.input';
-import { PlaceDirections } from './directions';
 import RemoveResponse from 'src/response/remove-response';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { Roles } from 'src/role/role-types';
 import CountResponse from 'src/response/count-response';
+import { RequestPlace } from './dto/request-place.input';
 
 @Resolver(() => PlaceEntity)
 export class PlaceResolver {
@@ -42,23 +42,21 @@ export class PlaceResolver {
     Roles.User,
   )
   @Query(() => [PlaceEntity], { name: 'placesDashboard' })
-  findAllDashboard(
-    @Args('direction', { type: () => PlaceDirections, nullable: true })
-    direction?: PlaceDirections,
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ) {
-    return this.placeService.findAll(direction, take, skip);
+  findAllDashboard(@Args('params', { nullable: true }) params?: RequestPlace) {
+    return this.placeService.findAll(
+      params?.direction,
+      params?.take,
+      params?.skip,
+    );
   }
 
   @Query(() => [PlaceEntity], { name: 'places' })
-  findAll(
-    @Args('direction', { type: () => PlaceDirections, nullable: true })
-    direction?: PlaceDirections,
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ) {
-    return this.placeService.findAll(direction, take, skip);
+  findAll(@Args('params', { nullable: true }) params?: RequestPlace) {
+    return this.placeService.findAll(
+      params?.direction,
+      params?.take,
+      params?.skip,
+    );
   }
 
   @Role(

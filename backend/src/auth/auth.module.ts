@@ -14,11 +14,12 @@ import { TokensModule } from 'src/tokens/tokens.module';
     TokensModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '30s' },
-      }),
       inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        global: true,
+        secret: config.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '30d' },
+      }),
     }),
   ],
   providers: [AuthResolver, AuthService],
