@@ -8,6 +8,7 @@ import {
   BadRequestException,
   HttpCode,
   Res,
+  HttpStatus,
 } from "@nestjs/common";
 import { AppService } from "./app.service";
 import {
@@ -22,7 +23,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Post("preview")
-  @HttpCode(201)
   @UseInterceptors(FileInterceptor("preview"))
   async savePreview(
     @UploadedFile() preview: Express.Multer.File,
@@ -34,10 +34,10 @@ export class AppController {
     if (query) {
       const { w, h } = query;
       const url = (await this.appService.savePreview(preview, +w, +h)).url;
-      return res.json({ url });
+      return res.status(HttpStatus.CREATED).json({ url });
     } else {
       const url = (await this.appService.savePreview(preview)).url;
-      return res.json({ url });
+      return res.status(HttpStatus.CREATED).json({ url });
     }
   }
 

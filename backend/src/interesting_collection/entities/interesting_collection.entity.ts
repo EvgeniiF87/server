@@ -59,10 +59,10 @@ export class InterestingCollectionEntity {
   )
   category: InterestingCategorySelectEntity[];
   @Field(() => Date)
-  @CreateDateColumn()
+  @CreateDateColumn({ type: 'timestamp' })
   created_at: Date;
 
   @Field(() => Date)
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 }

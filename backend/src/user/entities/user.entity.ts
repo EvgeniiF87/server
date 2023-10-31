@@ -27,8 +27,8 @@ export class UserEntity {
   @Column({ unique: true })
   email: string;
 
-  @Field()
-  @Column({ unique: true })
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
   phone: string;
 
   @Field()
@@ -64,6 +64,6 @@ export class UserEntity {
   created_at: Date;
 
   @Field(() => Date)
-  @UpdateDateColumn()
+  @UpdateDateColumn({ type: 'timestamp' })
   updated_at: Date;
 }

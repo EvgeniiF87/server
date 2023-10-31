@@ -11,17 +11,17 @@ export class EventPlaceTagEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => EventEntity, (event) => event.tags)
   @Field(() => EventEntity)
+  @ManyToOne(() => EventEntity, (event) => event.tags)
   event: EventEntity;
 
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   eventId?: number;
 
-  @Field(() => EventEntity)
+  @Field(() => PlaceEntity)
   @ManyToOne(() => PlaceEntity, (place) => place.tags)
-  place: EventEntity;
+  place: PlaceEntity;
 
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })

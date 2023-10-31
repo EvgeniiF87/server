@@ -3,14 +3,16 @@ import { CreateEventInput } from './dto/create-event.input';
 import { UpdateEventInput } from './dto/update-event.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEntity } from './entities/event.entity';
-import { Repository } from 'typeorm';
-import { EventDirections } from './directions';
+import { Like, Repository } from 'typeorm';
+import { RequestEvent } from './dto/request-event.input';
+import { TagService } from 'src/tag/tag.service';
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly EventRepository: Repository<EventEntity>,
+    private readonly tagService: TagService,
   ) {}
 
   async getCount() {
@@ -21,9 +23,17 @@ export class EventService {
     return await this.EventRepository.save({ ...createEventInput });
   }
 
-  async findAll(direction?: EventDirections, take?: number, skip?: number) {
+  async findAll(params: RequestEvent) {
+    const { direction, title, desc, tag, take, skip } = params;
+    const tagsId = await this.tagService.findIdByName(tag);
+
     return await this.EventRepository.find({
-      where: { direction: direction },
+      where: {
+        direction,
+        title: Like(`%${title}%`),
+        desc: Like(`%${desc}%`),
+        tags: { tagsId },
+      },
       relations: {
         images: true,
         info: true,

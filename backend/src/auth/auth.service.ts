@@ -81,7 +81,7 @@ export class AuthService {
 
   generateToken(user: UserEntity) {
     const payload = { id: user.id, role: user.role.name };
-    const token = this.jwtService.sign(payload);
+    const token = this.jwtService.signAsync(payload);
     return { token };
   }
 

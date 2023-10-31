@@ -3,11 +3,11 @@ import { EventService } from './event.service';
 import { EventEntity } from './entities/event.entity';
 import { CreateEventInput } from './dto/create-event.input';
 import { UpdateEventInput } from './dto/update-event.input';
-import { EventDirections } from './directions';
 import RemoveResponse from 'src/response/remove-response';
 import { Role } from 'src/auth/decorators/role.decorator';
 import { Roles } from 'src/role/role-types';
 import CountResponse from 'src/response/count-response';
+import { RequestEvent } from './dto/request-event.input';
 
 @Resolver(() => EventEntity)
 export class EventResolver {
@@ -42,23 +42,13 @@ export class EventResolver {
     Roles.Client_manager,
   )
   @Query(() => [EventEntity], { name: 'eventsDashboard' })
-  findAllDashboard(
-    @Args('direction', { type: () => EventDirections, nullable: true })
-    direction?: EventDirections,
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ) {
-    return this.eventService.findAll(direction, take, skip);
+  findAllDashboard(@Args('params', { nullable: true }) params?: RequestEvent) {
+    return this.eventService.findAll(params);
   }
 
   @Query(() => [EventEntity], { name: 'events' })
-  findAll(
-    @Args('direction', { type: () => EventDirections, nullable: true })
-    direction?: EventDirections,
-    @Args('take', { type: () => Int, nullable: true }) take?: number,
-    @Args('skip', { type: () => Int, nullable: true }) skip?: number,
-  ) {
-    return this.eventService.findAll(direction, take, skip);
+  findAll(@Args('params', { nullable: true }) params?: RequestEvent) {
+    return this.eventService.findAll(params);
   }
 
   @Role(

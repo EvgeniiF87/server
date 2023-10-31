@@ -36,7 +36,7 @@ export class InfoEntity {
   @Column({ nullable: true })
   phone?: string;
 
-  @Field({ defaultValue: false })
+  @Field({ defaultValue: false, nullable: true })
   @Column({ type: 'boolean', default: false })
   call_back?: boolean;
 
@@ -56,7 +56,7 @@ export class InfoEntity {
   @Column({ nullable: true })
   latitude?: string;
 
-  @Field(() => [PlaceEntity])
+  @Field(() => PlaceEntity)
   @OneToOne(() => PlaceEntity, (place) => place.info, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
@@ -68,7 +68,7 @@ export class InfoEntity {
   @Column({ nullable: true })
   placeId?: number;
 
-  @Field(() => [EventEntity])
+  @Field(() => EventEntity)
   @OneToOne(() => EventEntity, (event) => event.info, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

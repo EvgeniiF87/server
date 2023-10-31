@@ -46,22 +46,22 @@ export class EventEntity extends DefaultFieldsEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  images: ImageEntity[];
+  images: Promise<ImageEntity[]>;
 
   @Field(() => InfoEntity)
   @OneToOne(() => InfoEntity, (info) => info.event, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  info: InfoEntity[];
+  info: Promise<InfoEntity>;
 
   @Field(() => [EventPlaceTagEntity])
   @OneToMany(() => EventPlaceTagEntity, (eventTag) => eventTag.event)
-  tags: EventPlaceTagEntity[];
+  tags: Promise<EventPlaceTagEntity[]>;
 
   @Field(() => [EventPlaceCostOptionEntity])
   @OneToMany(() => EventPlaceCostOptionEntity, (costOption) => costOption.event)
-  costOption: EventPlaceCostOptionEntity[];
+  costOption: Promise<EventPlaceCostOptionEntity[]>;
 
   @Field(() => [InterestingCollectionSelectionEntity])
   @OneToMany(
