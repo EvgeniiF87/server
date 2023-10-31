@@ -24,14 +24,13 @@ export class EventService {
   }
 
   async findAll(params: RequestEvent) {
-    const { direction, title, desc, tag, take, skip } = params;
-    const tagsId = await this.tagService.findIdByName(tag);
-
+    const tagsId =
+      params?.tag && (await this.tagService.findIdByName(params?.tag));
     return await this.EventRepository.find({
       where: {
-        direction,
-        title: Like(`%${title}%`),
-        desc: Like(`%${desc}%`),
+        direction: params?.direction && params.direction,
+        title: params?.title && Like(`%${params?.title}%`),
+        desc: params?.desc && Like(`%${params?.desc}%`),
         tags: { tagsId },
       },
       relations: {
@@ -40,8 +39,8 @@ export class EventService {
         tags: { tags: true },
         costOption: { costOption: true },
       },
-      take: take,
-      skip: skip,
+      take: params?.take && params?.take,
+      skip: params?.skip && params?.skip,
     });
   }
 
